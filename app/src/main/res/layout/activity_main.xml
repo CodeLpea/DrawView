@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+<LinearLayout
+    android:id="@+id/ll_1"
+    android:layout_width="0dp"
+    android:orientation="horizontal"
+    android:layout_weight="1"
+
+    android:background="@drawable/llback01"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@drawable/left"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_location1"
+            android:text="00,00"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <com.example.lp.testdraw.QiuView
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:textColor="@color/point"
+            android:gravity="center"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="O"/>
+    </RelativeLayout>
+
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_2"
+        android:layout_width="0dp"
+        android:background="@drawable/llback01"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/right"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_location2"
+                android:text="00,00"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.example.lp.testdraw.QiuView
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:textColor="@color/point"
+                android:gravity="center"
+                android:textSize="10dp"
+                android:textStyle="bold"
+                android:text="O"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@drawable/llback01"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/bt_complete_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="完成定位"
+        android:textSize="10dp"/>
+    <Button
+        android:id="@+id/bt_clear_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="重置定位"
+        android:textSize="10dp"
+        android:textColor="#00F"/>
+    <Button
+        android:id="@+id/bt_show_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前定位"
+        android:textSize="10dp"/>
+
+
+</LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/tv_show_title"
+                android:text="当前选定的状态："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="关联函数x1=x2-a    y1=y2-b  即：左边的（2，2）等同与右边的（2+a，y=2+b）"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_currentA"
+                android:text="当前a："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_currentB"
+                android:text="当前b："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</LinearLayout>
