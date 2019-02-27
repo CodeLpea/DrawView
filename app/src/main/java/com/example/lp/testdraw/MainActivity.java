@@ -1,6 +1,7 @@
 package com.example.lp.testdraw;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private static final String TAG = "MainActivity";
     QiuView view1;
     QiuView view2;
@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btComplete,btCurrent,btClear;
     int height = 10, width = 10;
     private float x1,x2,y1,y2;//记录左右点最终的位置坐标
+    private SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();//初始化控件
         getHW();//获取宽高
+        initData();
 
     }
 
@@ -42,9 +45,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onGlobalLayout() {
                 // TODO Auto-generated method stub
-                ll1.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                view1.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 height=view1.getMeasuredHeight();
                 width=view1.getMeasuredWidth();
+
+                initData();
                 Log.e("测试：", view1.getMeasuredHeight()+","+view1.getMeasuredWidth());
                 Log.i(TAG, "getMeasuredHeight: "+view1.getMeasuredHeight());
                 Log.i(TAG, "getMeasuredWidth: "+view1.getMeasuredWidth());
@@ -68,12 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btClear.setOnClickListener(this);
         btCurrent.setOnClickListener(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        initData();
+
     }
     private void initData(){
+        sharedPreferences=getSharedPreferences("ddnKey", Context.MODE_PRIVATE);//初始化数据库
+        editor=sharedPreferences.edit();//初始化数据库编辑器
+        if(sharedPreferences.getFloat(Config.currentA,1f)!=1f){//不等于默认值的时候就覆盖当前值
+            Config.tv_currentA=sharedPreferences.getFloat(Config.currentA,1f);
+            Config.tv_currentB=sharedPreferences.getFloat(Config.currentB,1f);
+        }else {//否则直接使用当前从屏幕获取的值
+            Config.tv_currentA=width;
+        }
         tvA.setText("a: "+Config.tv_currentA);
         tvB.setText("b: "+Config.tv_currentB);
-
 
     }
 
@@ -87,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     y1=event.getY();
                     view1.setPlane(event.getX(), event.getY());
                     view1.invalidate();
-                    final float x2=Math.abs(x1+Config.tv_currentA-width);
+                    final float x2=x1+Config.tv_currentA-width;
                     final float y2=y1+Config.tv_currentB;
                     view2.setPlane(x2, y2);
                     view2.invalidate();
@@ -95,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void run() {
                             tv1.setText("当前坐标：\n"+x1+","+y1);
-                            tv2.setText("当前坐标：\n"+x2+","+y2);
+                            tv2.setText("当前坐标：\n"+(x2+width)+","+y2);
                         }
                     });
                 }else if(event.getX()>width&&event.getY()<height) {
@@ -118,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     y1=event.getY();
                     view1.setPlane(event.getX(), event.getY());
                     view1.invalidate();
-                    final float x2=Math.abs(x1+Config.tv_currentA-width);
+                    final float x2=x1+Config.tv_currentA-width;
                     final float y2=y1+Config.tv_currentB;
                     view2.setPlane(x2, y2);
                     view2.invalidate();
@@ -126,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void run() {
                             tv1.setText("当前坐标：\n"+x1+","+y1);
-                            tv2.setText("当前坐标：\n"+x2+","+y2);
+                            tv2.setText("当前坐标：\n"+(x2+width)+","+y2);
                         }
                     });
                 }else if(event.getX()>width&&event.getY()<height) {
@@ -154,7 +166,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i(TAG, "清空定位关系 a,b: ");
                 Toast.makeText(this,"已经清除a,b值",Toast.LENGTH_LONG).show();
                 tvTitle.setText("当前状态为：刚刚清除ab对应关系，回归默认值");
-                Config.tv_currentA= 1f;
+                editor.putFloat(Config.currentA,width);//此处填入获取到的宽度值
+                editor.commit();
+                Config.tv_currentA=sharedPreferences.getFloat(Config.currentA,1f);
                 Config.tv_currentB= 1f;
                 tvA.setText("a: "+Config.tv_currentA);
                 tvB.setText("a: "+Config.tv_currentB);
@@ -163,8 +177,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i(TAG, "保存定位关系a,b: ");
                 Toast.makeText(this,"已经保存当前a,b对应关系",Toast.LENGTH_LONG).show();
                 tvTitle.setText("已经保存当前a,b对应关系");
-                Config.tv_currentA= Math.abs(x2-x1);
-                Config.tv_currentB= Math.abs(y2-y1);
+                editor.putFloat(Config.currentA,x2-x1);//此处填入获取到的宽度值
+                editor.putFloat(Config.currentB,y2-y1);//此处填入获取到的宽度值
+                editor.commit();
+                Config.tv_currentA=sharedPreferences.getFloat(Config.currentA,1f);
+                Config.tv_currentB= sharedPreferences.getFloat(Config.currentB,1f);
+              /*  Config.tv_currentA= Math.abs(x2-x1);
+                Config.tv_currentB= Math.abs(y2-y1);*/
                 tvA.setText("a: "+Config.tv_currentA);
                 tvB.setText("b:"+Config.tv_currentB);
                 break;
@@ -176,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 view1.setPlane(width/2, height/2);
                 tv1.setText("当前坐标：\n"+x1+","+y1);
                 view1.invalidate();
-                float x2=Math.abs(x1+Config.tv_currentA-width);
+                float x2=x1+Config.tv_currentA-width;
                 float y2=y1+Config.tv_currentB;
                 view2.setPlane(x2, y2);
                 view2.invalidate();
